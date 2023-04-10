@@ -11,3 +11,20 @@ export const index = async (req, res) => {
     res.status(500).send({ error: `Cannot fetch users` });
   }
 };
+
+export const createPost = async (request, reply) => {
+  const { userId, content } = request.body;
+
+  try {
+    const post = await prisma.post.create({
+      data: {
+        userId,
+        content,
+      },
+    });
+    return post;
+  } catch (error) {
+    console.log(error);
+    reply.status(500).send("Não foi possível criar o post");
+  }
+};
