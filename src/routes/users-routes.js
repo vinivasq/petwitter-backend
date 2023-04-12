@@ -8,10 +8,4 @@ export default {
     preHandler: [validateRequest],
     handler: UserController.index,
   },
-  createPost: {
-    method: "POST",
-    url: "/post",
-    preHandler: [validateRequest],
-    handler: UserController.createPost,
-  },
 };
