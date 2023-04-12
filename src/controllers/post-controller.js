@@ -1,13 +1,22 @@
 import { prisma } from "../helpers/utils.js";
 
 export const getPost = async (request, reply) => {
-  const { id } = request.query;
+  const { id, userId } = request.query;
 
   try {
     if (id) {
       const post = await prisma.post.findUnique({
         where: {
           id: Number(id),
+        },
+      });
+      return post;
+    }
+
+    if (userId) {
+      const post = await prisma.post.findMany({
+        where: {
+          userId: Number(userId),
         },
       });
       return post;
