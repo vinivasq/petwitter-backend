@@ -1,9 +1,21 @@
 import { prisma } from "../helpers/utils.js";
 
-export const index = async (req, res) => {
+export const getUser = async (req, res) => {
+  const { id } = req.query;
+
   try {
-    let users = await prisma.user.findMany({
-      select: { email: true },
+    if (id) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: Number(id),
+        },
+        select: { name: true, username: true },
+      });
+      return user;
+    }
+
+    const users = await prisma.user.findMany({
+      select: { name: true, username: true },
     });
     return res.send({ data: { users } });
   } catch (error) {

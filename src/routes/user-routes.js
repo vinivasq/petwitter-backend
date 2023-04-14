@@ -2,10 +2,10 @@ import { validateRequest } from "../middleware/auth.js";
 import * as UserController from "../controllers/user-controller.js";
 
 export default {
-  getAllUsers: {
+  getUser: {
     method: "GET",
-    url: "/users",
+    url: "/user",
     preHandler: [validateRequest],
-    handler: UserController.index,
+    handler: UserController.getUser,
   },
 };

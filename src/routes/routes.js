@@ -1,4 +1,4 @@
-import userRoutes from "./users-routes.js";
+import userRoutes from "./user-routes.js";
 import authRoutes from "./auth-routes.js";
 import postRoutes from "./post-routes.js";
 
