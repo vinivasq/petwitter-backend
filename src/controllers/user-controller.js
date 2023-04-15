@@ -1,7 +1,7 @@
 import { prisma } from "../helpers/utils.js";
 
 export const getUser = async (req, res) => {
-  const { id } = req.query;
+  const { username, id } = req.query;
 
   try {
     if (id) {
@@ -10,6 +10,16 @@ export const getUser = async (req, res) => {
           id: Number(id),
         },
         select: { name: true, username: true },
+      });
+      return user;
+    }
+
+    if (username) {
+      const user = await prisma.user.findUnique({
+        where: {
+          username,
+        },
+        select: { id: true, name: true, username: true },
       });
       return user;
     }
