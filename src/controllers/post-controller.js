@@ -18,11 +18,18 @@ export const getPost = async (request, reply) => {
         where: {
           userId: Number(userId),
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
       return post;
     }
 
-    const post = await prisma.post.findMany();
+    const post = await prisma.post.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
     return post;
   } catch (error) {
     reply.status(500).send("Não foi possível listar os posts");
