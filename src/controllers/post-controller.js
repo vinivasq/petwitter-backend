@@ -28,7 +28,7 @@ export const getPost = async (request, reply) => {
 
     if (cursor) {
       const posts = await prisma.post.findMany({
-        take: 4,
+        take: 7,
         skip: 1,
         cursor: {
           id: Number(cursor),
@@ -37,7 +37,7 @@ export const getPost = async (request, reply) => {
           createdAt: "desc",
         },
       });
-      const lastPost = posts[3];
+      const lastPost = posts[posts.length - 1];
       myCursor = lastPost.id;
 
       return { posts, myCursor };
