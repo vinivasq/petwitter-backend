@@ -1,21 +1,18 @@
 import { prisma } from "../helpers/utils.js";
 
 export const getPost = async (request, reply) => {
-  const { id, userId, cursor } = request.query;
-  let myCursor;
+  const { userId, cursor } = request.query;
 
-  try {
-    if (id) {
-      const post = await prisma.post.findUnique({
-        where: {
-          id: Number(id),
+  if (userId) {
+    let myCursor;
+
+    if (cursor >= 7) {
+      const posts = await prisma.post.findMany({
+        take: 7,
+        skip: 1,
+        cursor: {
+          id: Number(cursor),
         },
-      });
-      return post;
-    }
-
-    if (userId) {
-      const post = await prisma.post.findMany({
         where: {
           userId: Number(userId),
         },
@@ -23,28 +20,33 @@ export const getPost = async (request, reply) => {
           createdAt: "desc",
         },
       });
-      return post;
-    }
 
-    if (cursor) {
+      const lastPost = posts[6];
+      myCursor = lastPost.id;
+      return { posts, myCursor };
+    } else if (cursor < 7) {
       const posts = await prisma.post.findMany({
-        take: 7,
+        take: 6,
         skip: 1,
         cursor: {
           id: Number(cursor),
+        },
+        where: {
+          userId: Number(userId),
         },
         orderBy: {
           createdAt: "desc",
         },
       });
-      const lastPost = posts[posts.length - 1];
-      myCursor = lastPost.id;
 
-      return { posts, myCursor };
+      return { posts };
     }
 
     const posts = await prisma.post.findMany({
       take: 7,
+      where: {
+        userId: Number(userId),
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -52,11 +54,43 @@ export const getPost = async (request, reply) => {
 
     const lastPost = posts[6];
     myCursor = lastPost.id;
-
     return { posts, myCursor };
-  } catch (error) {
-    reply.status(500).send("Não foi possível listar os posts");
-    console.log(error);
+  } else {
+    let myCursor;
+
+    try {
+      if (cursor) {
+        const posts = await prisma.post.findMany({
+          take: 7,
+          skip: 1,
+          cursor: {
+            id: Number(cursor),
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        const lastPost = posts[posts.length - 1];
+        myCursor = lastPost.id;
+
+        return { posts, myCursor };
+      }
+
+      const posts = await prisma.post.findMany({
+        take: 7,
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      const lastPost = posts[6];
+      myCursor = lastPost.id;
+
+      return { posts, myCursor };
+    } catch (error) {
+      reply.status(500).send("Não foi possível listar os posts");
+      console.log(error);
+    }
   }
 };
 
