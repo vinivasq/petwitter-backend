@@ -21,7 +21,7 @@ export const getPost = async (request, reply) => {
         },
       });
 
-      const lastPost = posts[6];
+      const lastPost = posts[posts.length - 1];
       myCursor = lastPost.id;
       return { posts, myCursor };
     } else if (cursor < 7) {
@@ -52,7 +52,7 @@ export const getPost = async (request, reply) => {
       },
     });
 
-    const lastPost = posts[6];
+    const lastPost = posts[posts.length - 1];
     myCursor = lastPost.id;
     return { posts, myCursor };
   } else {
@@ -83,7 +83,7 @@ export const getPost = async (request, reply) => {
         },
       });
 
-      const lastPost = posts[6];
+      const lastPost = posts[posts.length - 1];
       myCursor = lastPost.id;
 
       return { posts, myCursor };
